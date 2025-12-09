@@ -12,6 +12,9 @@ hero:
       text: Get started
       link: introduction/what-is-nasync
     - theme: alt
+      text: Official Knowledge Center
+      link: https://support.ugnas.com/knowledgecenter/#/know
+    - theme: alt
       text: Reddit
       link: https://www.reddit.com/r/UgreenNASync/
     - theme: alt

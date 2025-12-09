@@ -21,6 +21,9 @@ hero:
       text: DE Discord
       link: https://discord.gg/7uD4NGwcHD
     - theme: alt
+      text: Forum
+      link: https://community.ugreen.com/nas/
+    - theme: alt
       text: DE Forum
       link: https://ugreen-forum.de/
   image:

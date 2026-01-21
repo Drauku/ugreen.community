@@ -208,3 +208,5 @@ OPTIONS
                                                           i: (i)nherit only
                                                           n: (n)o propagate
 ```
+
+::: info CREDIT This guide was created by [sliekens](https://github.com/sliekens) :::

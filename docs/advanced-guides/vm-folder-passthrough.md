@@ -118,7 +118,7 @@ We will mount the raw virtiofs share to the hidden folder, then use `bindfs` to 
 
 2. Add these two lines. (Assume your VM user's UID is `1000`, and UGOS expects files to be created with group "admin", which is GID `10`):
 
-    - NOTE: It works best if the USERNAME inside your VM matches the USERNAME in UGOS that you want having ownership of the files created inside this folder.
+    - NOTE: It works best if the USERNAME inside your VM matches the USERNAME in UGOS that you want to have ownership of the files created inside this folder.
 
     ```fstab
     # 1. Mount raw virtiofs to a hidden staging folder

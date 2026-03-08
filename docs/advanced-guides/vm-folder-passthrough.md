@@ -26,7 +26,7 @@
     ```
 
     - NOTE: The Name will be in the format of a UUID, e.g. "f229f5ce-b904-4027-a50b-ba24b1d8e2ea"
-    - NOTE: If you followed the [virtual-machine-name-change guide](https://guide.ugreen.community/advanced-guides/virtual-machine-name-change.html), then the name should be easier to find.
+    - NOTE: If you followed the [virtual-machine-name-change guide](./virtual-machine-name-change.html), then the name should be easier to find.
 
 3. Dump the VM XML to a temp file:
 
@@ -47,6 +47,7 @@
 Place it anywhere before `<devices>`, as long as it’s a sibling of `<memory>`, `<vcpu>`, `<devices>`, etc.
 
 5. In the same XML file, inside the `<devices>` section, add a `filesystem` block:
+   - **NOTE**: modify the `/volume1/projects` path below to the full path of your shared folder. You can rename the 'tag' in the <target dir=...> field too; remember this tag for later.
 
     ```xml
     <devices>
@@ -64,13 +65,13 @@ Place it anywhere before `<devices>`, as long as it’s a sibling of `<memory>`,
     - The `<target dir='projects-fs'/>` string is the **tag** the VM will mount.
   Remember this tag exactly (case‑sensitive).
 
-6. Redefine the VM from the modified XML:
+7. Redefine the VM from the modified XML:
 
     ```bash
     virsh define /tmp/vm-config.xml
     ```
 
-7. Restart the VM so the new config is applied:
+8. Restart the VM so the new config is applied:
 
     ```bash
     virsh shutdown <vm-name>
@@ -117,7 +118,8 @@ We will mount the raw virtiofs share to the hidden folder, then use `bindfs` to 
 
 2. Add these two lines. (Assume your VM user's UID is `1000`, and UGOS expects files to be created with group "admin", which is GID `10`):
 
-    - NOTE: It works best if the USERNAME inside your VM matches the USERNAME in UGOS that you want to have ownership of the files created inside this folder.
+    - **NOTE**: It works best if the USERNAME inside your VM matches the USERNAME in UGOS that you want to have ownership of the files created inside this folder.
+    - **NOTE**: If you don't know the UID of your VM user, run this command: `id $USER`. The admin GID of 10 is required by UGOS, please don't change that.
 
     ```fstab
     # 1. Mount raw virtiofs to a hidden staging folder

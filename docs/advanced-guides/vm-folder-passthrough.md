@@ -62,16 +62,15 @@ Place it anywhere before `<devices>`, as long as it’s a sibling of `<memory>`,
     ```
 
     - Replace `/volume1/projects` with the host path you want to mount.
-    - The `<target dir='projects-fs'/>` string is the **tag** the VM will mount.
-  Remember this tag exactly (case‑sensitive).
+    - The `<target dir='projects-fs'/>` string is the **tag** the VM will mount. Remember this tag exactly (case‑sensitive).
 
-7. Redefine the VM from the modified XML:
+6. Redefine the VM from the modified XML:
 
     ```bash
     virsh define /tmp/vm-config.xml
     ```
 
-8. Restart the VM so the new config is applied:
+7. Restart the VM so the new config is applied:
 
     ```bash
     virsh shutdown <vm-name>
@@ -188,7 +187,5 @@ As your non-root user, create a file:
 
 ## 5. Common gotchas to double‑check
 
-- The tag in fstab (`projects-fs`) must exactly match the `<target dir='...'/>`
-  tag in the VM XML.
+- The tag in fstab (`projects-fs`) must exactly match the `<target dir='...'/>` tag in the VM XML.
 - If you ever edit the VM via the UGOS GUI, you may lose the `<filesystem>` block. If the mount suddenly fails, re‑add the XML block and restart the VM.
-

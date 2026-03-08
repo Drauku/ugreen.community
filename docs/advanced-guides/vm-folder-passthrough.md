@@ -1,9 +1,12 @@
-# UGOS Pro: virtiofs host folder into VM with fstab automount
+# VirtioFS host folder into VM with fstab automount
 
-> Goal: Share a host folder from UGOS Pro into a Linux VM using virtiofs, and have it mounted via `/etc/fstab` without breaking boot.
-> We also use `bindfs` inside the VM so your VM user has correct read/write permissions, and files created inside the VM map correctly to UGOS's user and "admin" group (GID 10).
+::: info GOAL
+Share a host folder from UGOS Pro into a Linux VM using virtiofs, and have it mounted via `/etc/fstab` without breaking boot.
+We also use `bindfs` inside the VM so your VM user has correct read/write permissions, and files created inside the VM map correctly to UGOS's user and "admin" group (GID 10).
+:::
 
-***
+> [!WARNING]
+> This guide was written for UGOS Pro only, and was last tested with the version 1.13.x
 
 ## 1. On the UGOS host: add virtiofs to the VM
 
@@ -25,7 +28,8 @@
     virsh list --all
     ```
 
-    - NOTE: The Name will be in the format of a UUID, e.g. "f229f5ce-b904-4027-a50b-ba24b1d8e2ea"
+    > [!NOTE]
+    > The Name will be in the format of a UUID, e.g. "f229f5ce-b904-4027-a50b-ba24b1d8e2ea"
 
 3. Dump the VM XML to a temp file:
 
@@ -43,10 +47,12 @@
     </memoryBacking>
     ```
 
-Place it anywhere before `<devices>`, as long as it’s a sibling of `<memory>`, `<vcpu>`, `<devices>`, etc.
+    Place it anywhere before `<devices>`, as long as it’s a sibling of `<memory>`, `<vcpu>`, `<devices>`, etc.
 
 5. In the same XML file, inside the `<devices>` section, add a `filesystem` block:
-   - **NOTE**: modify the `/volume1/projects` path below to the full path of your shared folder. You can rename the 'tag' in the <target dir=...> field too; remember this tag for later.
+   
+    > [!NOTE]
+    > Modify the `/volume1/projects` path below to the full path of your shared folder. You can rename the 'tag' in the `<target dir=...>` field too; remember this tag for later.
 
     ```xml
     <devices>
@@ -76,8 +82,6 @@ Place it anywhere before `<devices>`, as long as it’s a sibling of `<memory>`,
     virsh start <vm-name>
     ```
 
-***
-
 ## 2. Inside the VM: Install bindfs and create mount points
 
 Because UGOS forces `passthrough` access mode for virtiofs, the mount will show up owned by `root:root` with strict permissions. We use `bindfs` to remap this safely for your normal user without modifying the host.
@@ -101,8 +105,6 @@ Because UGOS forces `passthrough` access mode for virtiofs, the mount will show 
     - `projects-fs` must exactly match the `<target dir='...'/>` tag in the VM XML.
     - If this works and `/mnt/projects` shows the host files, proceed to edit `/etc/fstab` for automount, otherwise fix the issue before continuing.
 
-***
-
 ## 3. Configure fstab with virtiofs and bindfs
 
 We will mount the raw virtiofs share to the hidden folder, then use `bindfs` to present it to the final folder with the correct user permissions.
@@ -116,8 +118,11 @@ We will mount the raw virtiofs share to the hidden folder, then use `bindfs` to 
 
 2. Add these two lines. (Assume your VM user's UID is `1000`, and UGOS expects files to be created with group "admin", which is GID `10`):
 
-    - **NOTE**: It works best if the USERNAME inside your VM matches the USERNAME in UGOS that you want to have ownership of the files created inside this folder.
-    - **NOTE**: If you don't know the UID of your VM user, run this command: `id $USER`. The admin GID of 10 is required by UGOS, please don't change that.
+    > [!NOTE]
+    > It works best if the USERNAME inside your VM matches the USERNAME in UGOS that you want to have ownership of the files created inside this folder.
+    
+    > [!NOTE]
+    > If you don't know the UID of your VM user, run this command: `id $USER`. The admin GID of 10 is required by UGOS, please don't change that.
 
     ```fstab
     # 1. Mount raw virtiofs to a hidden staging folder
@@ -138,8 +143,6 @@ We will mount the raw virtiofs share to the hidden folder, then use `bindfs` to 
     ```bash
     sudo systemctl daemon-reload
     ```
-
-***
 
 ## 4. Verify automount works
 
@@ -174,7 +177,8 @@ We will mount the raw virtiofs share to the hidden folder, then use `bindfs` to 
     - You should see a line showing `projects-fs` mounted on `/mnt/projects` with type `virtiofs`.
 
 4. Test file creation:
-As your non-root user, create a file:
+
+    As your non-root user, create a file:
 
     ```bash
     touch /mnt/projects/test-file.txt
@@ -182,9 +186,11 @@ As your non-root user, create a file:
 
     - If you check this file on the UGOS host via SSH (`ls -l /volume1/projects/test-file.txt`), it will correctly show as owned by your UGOS user and the `admin` group.
 
-***
-
 ## 5. Common gotchas to double‑check
 
 - The tag in fstab (`projects-fs`) must exactly match the `<target dir='...'/>` tag in the VM XML.
 - If you ever edit the VM via the UGOS GUI, you may lose the `<filesystem>` block. If the mount suddenly fails, re‑add the XML block and restart the VM.
+
+::: info Credit
+This guide was created by [Drauku](https://github.com/Drauku)
+:::

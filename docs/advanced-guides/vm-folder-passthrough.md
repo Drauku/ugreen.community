@@ -26,7 +26,7 @@
     ```
 
     - NOTE: The Name will be in the format of a UUID, e.g. "f229f5ce-b904-4027-a50b-ba24b1d8e2ea"
-    - NOTE: If you followed the [virtual-machine-name-change guide](./virtual-machine-name-change.html), then the name should be easier to find.
+    - NOTE: If you followed the [virtual-machine-name-change guide](./vm-name-change.html), then the name should be easier to find.
 
 3. Dump the VM XML to a temp file:
 

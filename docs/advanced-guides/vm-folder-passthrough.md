@@ -26,8 +26,7 @@
     ```
 
     - NOTE: The Name will be in the format of a UUID, e.g. "f229f5ce-b904-4027-a50b-ba24b1d8e2ea"
-    - NOTE: Here is a guide on how to change the name of a VM to a more user-friendly name:
-      - https://ugreen.community/virtual-machine-name-change.md
+    - NOTE: If you followed the [virtual-machine-name-change guide](https://guide.ugreen.community/advanced-guides/virtual-machine-name-change.html), then the name should be easier to find.
 
 3. Dump the VM XML to a temp file:
 
